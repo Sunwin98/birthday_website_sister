@@ -1,0 +1,162 @@
+    /* เพิ่ม CSS นี้เพื่อแก้ปัญหา SweetAlert2 */
+    body.swal2-shown {
+        height: 100vh !important;
+        overflow: hidden !important;
+    }
+    
+    body.swal2-height-auto {
+        height: 100vh !important;
+        min-height: 100vh !important;
+        max-height: 100vh !important;
+        overflow: hidden !important;
+    }
+    
+    /* แก้ container ของ SweetAlert2 */
+    .swal2-container {
+        background: rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    .swal2-popup {
+        max-width: 90vw !important;
+        max-height: 90vh !important;
+    }
+    
+    /* บังคับ body ให้อยู่ในขนาดที่ถูกต้อง */
+    html, body {
+        height: 100vh !important;
+        max-height: 100vh !important;
+        overflow-x: hidden !important;
+    }
+
+    body {
+      font-family: 'Kanit', sans-serif;
+      background: linear-gradient(to right bottom, #0d0d0d, #5f4b8b, #cbbbf6);
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 1px 1px 3px black;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    input {
+      padding: 0.5rem;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      background: linear-gradient(to right bottom, #1b4242, #4fbdba, #cdeed6);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;  
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+    #error {
+      color: yellow;
+      margin-top: 1rem;
+    }
+        @media (max-width: 768px) {
+        body {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        
+        .container {
+            padding: 10px !important;
+            width: 100% !important;
+        }
+        
+        .main-content {
+            margin: 10px !important;
+            padding: 20px 15px !important;
+            width: calc(100% - 20px) !important;
+        }
+        
+        .balloon {
+            width: 30px !important;
+            height: 40px !important;
+        }
+    }
+
+        /* เพิ่ม Custom Animations สำหรับ SweetAlert2 */
+    @keyframes swal2-show {
+        0% {
+            transform: scale(0.7) translateY(-100px);
+            opacity: 0;
+        }
+        45% {
+            transform: scale(1.05) translateY(20px);
+            opacity: 0.8;
+        }
+        80% {
+            transform: scale(0.95) translateY(-10px);
+            opacity: 0.9;
+        }
+        100% {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes swal2-hide {
+        0% {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(0.5) translateY(-100px);
+            opacity: 0;
+        }
+    }
+    
+    @keyframes swal2-rotate-success {
+        0% {
+            transform: rotate(-45deg);
+            opacity: 0;
+        }
+        100% {
+            transform: rotate(0deg);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes swal2-shake-error {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+        20%, 40%, 60%, 80% { transform: translateX(10px); }
+    }
+    
+    /* Apply animations to SweetAlert2 */
+    .swal2-popup.swal2-show {
+        animation: swal2-show 0.8s ease-out;
+    }
+    
+    .swal2-popup.swal2-hide {
+        animation: swal2-hide 0.3s ease-in;
+    }
+    
+    .swal2-success {
+        animation: swal2-rotate-success 0.5s ease-in-out;
+    }
+    
+    .swal2-error {
+        animation: swal2-shake-error 0.6s ease-in-out;
+    }
+
+    

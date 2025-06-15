@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Swiper Slider</title>
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Custom CSS -->
+        <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2c1b2b 0%, #6f4e7c, #d6c6dc 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .welcome-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .welcome-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        .welcome-message {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+
+        .click-to-enter {
+            font-size: 1.2rem;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            border-radius: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
+
+        /* Scrolling Text - คำอวยพรวิ่ง */
+        .scrolling-text-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-size: 100% 100%;
+            animation: gradientShift 3s ease infinite;
+            padding: 15px 0;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .scrolling-text {
+            white-space: nowrap;
+            animation: scroll 20s linear infinite;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            padding: 0 100%;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Multiple scrolling texts */
+        .scrolling-text-1 {
+            animation-duration: 25s;
+            animation-delay: 0s;
+        }
+
+        .scrolling-text-2 {
+            animation-duration: 30s;
+            animation-delay: -10s;
+            font-size: 1.3rem;
+            margin-top: 5px;
+        }
+
+        .scrolling-text-3 {
+            animation-duration: 35s;
+            animation-delay: -20s;
+            font-size: 1.1rem;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+
+        .swiper {
+            width: 80%;
+            max-width: 800px;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        .swiper-slide {
+            background-position: center;
+            background-size: cover;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .main-content {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+            margin-bottom: 120px;
+        }
+
+        .birthday-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
+        }
+
+        .birthday-message {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            transition: all 0.5s ease;
+        }
+
+        /* Animation สำหรับการเปลี่ยนข้อความ */
+        .fade-in-out {
+            animation: fadeInOut 1s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Music Controls */
+        .music-controls {
+            margin: 20px 0;
+        }
+
+        .music-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            margin: 0 10px;
+        }
+
+        .music-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .volume-control {
+            margin-top: 15px;
+        }
+
+        .volume-slider {
+            width: 200px;
+            height: 5px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .music-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 107, 107, 0.9);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            z-index: 10000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Music Playing Effect */
+        .music-playing {
+            animation: musicVibes 3s ease-in-out infinite;
+        }
+
+        .music-playing .scrolling-text-container {
+            animation: musicVibes 3s ease-in-out infinite, gradientShift 2s ease infinite;
+        }
+
+        @keyframes musicVibes {
+            0%, 100% { 
+                filter: hue-rotate(0deg) brightness(1); 
+            }
+            50% { 
+                filter: hue-rotate(20deg) brightness(1.1); 
+            }
+        }
+
+        /* Swiper Navigation Buttons */
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 18px;
+        }
+
+        /* Swiper Pagination */
+        .swiper-pagination-bullet {
+            background: white;
+            opacity: 0.5;
+        }
+
+        .swiper-pagination-bullet-active {
+            opacity: 1;
+            background: #ff6b6b;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .swiper {
+                width: 90%;
+                height: 300px;
+            }
+            
+            .birthday-title {
+                font-size: 1.8rem; /* เพิ่มขึ้น */
+            }
+            
+            .birthday-message {
+                font-size: 1rem; /* เพิ่มขึ้น */
+            }
+            
+            .volume-slider {
+                width: 150px;
+            }
+
+            .welcome-title {
+                font-size: 2.5rem;
+            }
+
+            .welcome-message {
+                font-size: 1.2rem;
+            }
+
+            .scrolling-text {
+                font-size: 1.2rem;
+            }
+
+            .scrolling-text-2 {
+                font-size: 1rem;
+            }
+
+            .scrolling-text-3 {
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                margin-bottom: 140px;
+                padding: 15px;
+            }
+        }
+
+        /* สำหรับหน้าจอที่เล็กมาก */
+        @media (max-width: 480px) {
+            .birthday-title {
+                font-size: 1.5rem;
+            }
+            
+            .birthday-message {
+                font-size: 0.9rem;
+            }
+            
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .welcome-message {
+                font-size: 1rem;
+            }
+            
+            .music-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .scrolling-text {
+                font-size: 1rem;
+            }
+            
+            .scrolling-text-2 {
+                font-size: 0.9rem;
+            }
+            
+            .scrolling-text-3 {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* สำหรับ Tablet */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .birthday-title {
+                font-size: 2.2rem;
+            }
+            
+            .birthday-message {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="welcome-screen">
+        <div class="welcome-title">🎂 Happy Birthday! 🎉</div>
+        <div class="welcome-message">วันนี้เป็นวันพิเศษ!</div>
+        <div class="click-to-enter">👆 คลิกที่ไหนก็ได้เพื่อเริ่มต้น 🎵</div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="birthdayMusic" loop preload="auto">
+        <source src="VERYHAPPY  -  feat   _ Sing Me Your Song  (mp3cut.net).mp3" type="audio/mpeg">
+        <source src="VERYHAPPY  -  feat   _ Sing Me Your Song  (mp3cut.net).mp3" type="audio/ogg">
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Swiper Container -->
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="imgs/IMG_0001.JPG" alt="Birthday Memory 1"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_0033.JPG" alt="Birthday Memory 2"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_0149.jpg" alt="Birthday Memory 3"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_0218.jpg" alt="Birthday Memory 4"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_0350.JPG" alt="Birthday Memory 5"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_0528.JPG" alt="Birthday Memory 6"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_0582.JPG" alt="Birthday Memory 7"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_0610.JPG" alt="Birthday Memory 8"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_0753.JPG" alt="Birthday Memory 9"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_0927.jpg" alt="Birthday Memory 10"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_0943.jpg" alt="Birthday Memory 11"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_5025.jpg" alt="Birthday Memory 12"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_6772.jpg" alt="Birthday Memory 13"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_7997.jpg" alt="Birthday Memory 14"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_8084.jpg" alt="Birthday Memory 15"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_8276.jpg" alt="Birthday Memory 16"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_8456.jpg" alt="Birthday Memory 17"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_8883.jpg" alt="Birthday Memory 18"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_8886.jpg" alt="Birthday Memory 19"></div>
+            <div class="swiper-slide"><img src="imgs/IMG_9276.jpg" alt="Birthday Memory 20"></div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+
+        <!-- แก้ไขส่วน Main Content -->
+    <div class="main-content">
+        <h1 class="birthday-title" id="birthdayTitle">🎂 Happy Birthday! 🎉</h1>
+        <p class="birthday-message" id="birthdayMessage">วันนี้เป็นวันพิเศษของเจเจ๊<br>ขอให้มีความสุขมากๆ นะครับบ! 💕</p>
+        
+        <!-- Music Controls -->
+        <div class="music-controls">
+            <button id="playMusic" class="music-btn" style="display: none;">🎵 เล่นเพลง</button>
+            <button id="stopMusic" class="music-btn">⏹️ หยุดเพลง</button>
+            
+            <div class="volume-control">
+                <label for="volumeSlider" style="color: white; margin-right: 10px;">🔊 เสียง:</label>
+                <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="80">
+                <span id="volumeValue" style="color: white; margin-left: 10px;">80%</span>
+            </div>
+        </div>
+    </div>
+<script>    // เพิ่มใน <script> section
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // ...existing code...
+    
+        // DOM Elements สำหรับเปลี่ยนข้อความ
+        const birthdayTitle = document.getElementById('birthdayTitle');
+        const birthdayMessage = document.getElementById('birthdayMessage');
+    
+        // ข้อความสำหรับหัวข้อ
+        const titles = [
+            "🎂 Happy Birthday! 🎉",
+            "🌟 วันเกิดมาแล้ว! 🎊",
+            "🎈 สุขสันต์วันเกิด! 🎁",
+            "💖 วันพิเศษของเจเจ๊! ✨",
+            "🎵 Happy Birthday to You! 🎶",
+            "🌈 วันแห่งความสุข! 🎯",
+            "🎪 ขอให้ต่อจากนี้มีแต่วันที่ดี! 🎭"
+        ];
+    
+        // ข้อความสำหรับเนื้อหา
+        const messages = [
+            "วันนี้เป็นวันพิเศษของเจเจ๊<br>ขอให้มีความสุขมากๆ นะครับบ! 💕",
+            "ขอให้ทุกความฝันเป็นจริงนะครับบ<br>และมีความสุขตลอดไป! 🌟",
+            "วันเกิดปีนี้ขอให้ดีกว่าปีที่แล้ว<br>เต็มไปด้วยรอยยิ้มและเสียงหัวเราะ! 😊",
+            "ขอให้มีสุขภาพแข็งแรง<br>และประสบความสำเร็จในทุกเรื่อง! 🏆",
+            "วันนี้เป็นวันที่ผู้หญิงที่เก่งที่สุดที่ไบร์ทเคยรู้จักได้เกิดมา<br>ไบร์ทรักเจ๊นะครับบ! 🎁",
+            "ขอให้ชีวิตเต็มไปด้วยสีสัน<br>เหมือนสายรุ้งหลังฝนตก! 🌈",
+            "ในวันพิเศษนี้<br>ขอส่งความรักและความปรารถนาดี! 💝"
+        ];
+    
+        let currentTitleIndex = 0;
+        let currentMessageIndex = 0;
+    
+        // ฟังก์ชันเปลี่ยนหัวข้อ
+        function changeTitle() {
+            birthdayTitle.classList.add('fade-in-out');
+            
+            setTimeout(() => {
+                currentTitleIndex = (currentTitleIndex + 1) % titles.length;
+                birthdayTitle.innerHTML = titles[currentTitleIndex];
+            }, 500); // เปลี่ยนข้อความตรงกลาง animation
+            
+            setTimeout(() => {
+                birthdayTitle.classList.remove('fade-in-out');
+            }, 1000);
+        }
+    
+        // ฟังก์ชันเปลี่ยนข้อความ
+        function changeMessage() {
+            birthdayMessage.classList.add('fade-in-out');
+            
+            setTimeout(() => {
+                currentMessageIndex = (currentMessageIndex + 1) % messages.length;
+                birthdayMessage.innerHTML = messages[currentMessageIndex];
+            }, 500);
+            
+            setTimeout(() => {
+                birthdayMessage.classList.remove('fade-in-out');
+            }, 1000);
+        }
+    
+        // ฟังก์ชันเปลี่ยนทั้งหัวข้อและข้อความพร้อมกัน
+        function changeBothTexts() {
+            changeTitle();
+            setTimeout(() => {
+                changeMessage();
+            }, 1500); // ให้ข้อความเปลี่ยนหลังจากหัวข้อเปลี่ยนเสร็จ
+        }
+    
+        // เริ่มเปลี่ยนข้อความทุก 8 วินาที
+        setInterval(changeBothTexts, 8000);
+    
+        // เปลี่ยนข้อความเร็วขึ้นเมื่อเล่นเพลง
+        function startFastTextChange() {
+            // เปลี่ยนทุก 5 วินาทีเมื่อเล่นเพลง
+            if (window.fastTextInterval) {
+                clearInterval(window.fastTextInterval);
+            }
+            window.fastTextInterval = setInterval(changeBothTexts, 5000);
+        }
+    
+        function stopFastTextChange() {
+            if (window.fastTextInterval) {
+                clearInterval(window.fastTextInterval);
+                window.fastTextInterval = null;
+            }
+        }
+    
+        // แก้ไขฟังก์ชัน startAutoMusic เพื่อเร่งการเปลี่ยนข้อความ
+        function startAutoMusic() {
+            if (!hasStarted) {
+                hasStarted = true;
+                isPlaying = true;
+                
+                welcomeScreen.classList.add('hidden');
+                setTimeout(() => {
+                    welcomeScreen.style.display = 'none';
+                }, 500);
+                
+                birthdayMusic.play().then(() => {
+                    console.log('🎵 เพลงเริ่มเล่นอัตโนมัติแล้ว!');
+                    document.body.classList.add('music-playing');
+                    playMusicBtn.style.display = 'none';
+                    stopMusicBtn.style.display = 'inline-block';
+                    createCelebrationEffect();
+                    startFastTextChange(); // เร่งการเปลี่ยนข้อความ
+                }).catch(error => {
+                    console.log('ไม่สามารถเปิดเพลงอัตโนมัติได้:', error);
+                    playMusicBtn.style.display = 'inline-block';
+                    stopMusicBtn.style.display = 'none';
+                    isPlaying = false;
+                });
+                
+                swiper.autoplay.stop();
+                swiper.params.autoplay.delay = 1000;
+                swiper.params.speed = 300;
+                swiper.autoplay.start();
+            }
+        }
+    
+        // แก้ไขฟังก์ชัน stopMusic
+        function stopMusic() {
+            if (isPlaying) {
+                isPlaying = false;
+                birthdayMusic.pause();
+                birthdayMusic.currentTime = 0;
+                stopMusicBtn.style.display = 'none';
+                playMusicBtn.style.display = 'inline-block';
+                document.body.classList.remove('music-playing');
+                stopFastTextChange(); // หยุดการเปลี่ยนข้อความเร็ว
+            }
+        }
+    
+        // แก้ไขฟังก์ชัน playMusic
+        function playMusic() {
+            if (!isPlaying) {
+                isPlaying = true;
+                birthdayMusic.play().then(() => {
+                    playMusicBtn.style.display = 'none';
+                    stopMusicBtn.style.display = 'inline-block';
+                    document.body.classList.add('music-playing');
+                    startFastTextChange(); // เร่งการเปลี่ยนข้อความ
+                }).catch(error => {
+                    console.error('ไม่สามารถเล่นเพลงได้:', error);
+                    isPlaying = false;
+                });
+            }
+        }
+    
+        // ...existing code (เก็บโค้ดเดิมที่เหลือ)...
+    });
+    </script>
+
+
+    <!-- Scrolling Text - คำอวยพรวิ่ง -->
+    <div class="scrolling-text-container">
+        <div class="scrolling-text scrolling-text-1">
+            🎉 ขอให้วันเกิดนี้เป็นวันที่แสนพิเศษ เต็มไปด้วยความสุข ความรัก และเสียงหัวเราะ 🎂 ขอให้ทุกความฝันของคุณเป็นจริง ✨ Happy Birthday! 🎊
+        </div>
+        <div class="scrolling-text scrolling-text-2">
+            💖 ขอให้มีสุขภาพแข็งแรง ความสำเร็จในทุกเรื่อง และมีผู้คนดีๆ อยู่รอบข้างเสมอ 🌟 ขอให้ปีใหม่นี้ดีกว่าปีที่แล้ว 🎈
+        </div>
+        <div class="scrolling-text scrolling-text-3">
+            🎁 วันเกิดเป็นวันที่พิเศษที่สุดในโลก ขอให้เต็มไปด้วยรอยยิ้ม ความอบอุ่น และความทรงจำดีๆ 🌸 Happy Birthday to you! 🎵
+        </div>
+    </div>
+    
+
+    <!-- Swiper JS และ JavaScript เดิม -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ตัวแปรสำหรับจัดการเพลง
+            let isPlaying = false;
+            let hasStarted = false;
+            
+            // DOM Elements
+            const birthdayMusic = document.getElementById('birthdayMusic');
+            const playMusicBtn = document.getElementById('playMusic');
+            const stopMusicBtn = document.getElementById('stopMusic');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const volumeValue = document.getElementById('volumeValue');
+            const welcomeScreen = document.getElementById('welcomeScreen');
+
+            // ตั้งค่าเสียงเริ่มต้น
+            birthdayMusic.volume = 0.8;
+
+            // สร้างคำอวยพรแบบสุ่ม
+            const wishes = [
+                "🎉 ขอให้วันเกิดนี้เป็นวันที่แสนพิเศษ เต็มไปด้วยความสุข ความรัก และเสียงหัวเราะ 🎂",
+                "💖 ขอให้มีสุขภาพแข็งแรง ความสำเร็จในทุกเรื่อง และมีผู้คนดีๆ อยู่รอบข้างเสมอ 🌟",
+                "🎁 วันเกิดเป็นวันที่พิเศษที่สุดในโลก ขอให้เต็มไปด้วยรอยยิ้ม ความอบอุ่น และความทรงจำดีๆ 🌸",
+                "✨ ขอให้ทุกความฝันของเจ๊เป็นจริง และได้รับสิ่งดีๆ มากมายในปีใหม่นี้ 🎊",
+                "🌈 ขอให้มีความสุขทุกวัน มีรอยยิ้มสดใส และได้ทำในสิ่งที่รัก 🎈",
+                "🎵 Happy Birthday! ขอให้วันนี้และทุกวันเป็นวันที่น่าจดจำ 🎶"
+            ];
+
+            // ฟังก์ชันสุ่มคำอวยพร
+            function updateScrollingText() {
+                const scrollingTexts = document.querySelectorAll('.scrolling-text');
+                scrollingTexts.forEach((text, index) => {
+                    const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+                    text.textContent = randomWish;
+                });
+            }
+
+            // เปลี่ยนคำอวยพรทุก 30 วินาที
+            setInterval(updateScrollingText, 30000);
+
+            // Initialize Swiper
+            const swiper = new Swiper('.mySwiper', {
+                effect: 'coverflow',
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                spaceBetween: 30,
+                coverflowEffect: {
+                    rotate: 50,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows: true,
+                },
+                autoplay: {
+                    delay: 1500,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
+                },
+                loop: true,
+                speed: 500,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                    dynamicBullets: true,
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 1,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 30,
+                    },
+                    1024: {
+                        slidesPerView: 3,
+                        spaceBetween: 40,
+                    },
+                },
+            });
+
+            // ฟังก์ชันเริ่มเล่นเพลงอัตโนมัติ
+            function startAutoMusic() {
+                if (!hasStarted) {
+                    hasStarted = true;
+                    isPlaying = true;
+                    
+                    welcomeScreen.classList.add('hidden');
+                    setTimeout(() => {
+                        welcomeScreen.style.display = 'none';
+                    }, 500);
+                    
+                    birthdayMusic.play().then(() => {
+                        console.log('🎵 เพลงเริ่มเล่นอัตโนมัติแล้ว!');
+                        document.body.classList.add('music-playing');
+                        playMusicBtn.style.display = 'none';
+                        stopMusicBtn.style.display = 'inline-block';
+                        createCelebrationEffect();
+                    }).catch(error => {
+                        console.log('ไม่สามารถเปิดเพลงอัตโนมัติได้:', error);
+                        playMusicBtn.style.display = 'inline-block';
+                        stopMusicBtn.style.display = 'none';
+                        isPlaying = false;
+                    });
+                }
+            }
+
+            // สร้างเอฟเฟกต์การเฉลิมฉลอง
+            function createCelebrationEffect() {
+                for (let i = 0; i < 30; i++) {
+                    setTimeout(() => {
+                        const particle = document.createElement('div');
+                        particle.innerHTML = ['🎉', '🎊', '✨', '🎈', '💖'][Math.floor(Math.random() * 5)];
+                        particle.style.position = 'fixed';
+                        particle.style.left = Math.random() * window.innerWidth + 'px';
+                        particle.style.top = '-50px';
+                        particle.style.fontSize = '30px';
+                        particle.style.pointerEvents = 'none';
+                        particle.style.zIndex = '9999';
+                        particle.style.animation = `fall ${3 + Math.random() * 2}s linear forwards`;
+                        
+                        document.body.appendChild(particle);
+                        
+                        setTimeout(() => {
+                            if (document.body.contains(particle)) {
+                                document.body.removeChild(particle);
+                            }
+                        }, 5000);
+                    }, i * 100);
+                }
+            }
+
+            // เพิ่ม CSS animation สำหรับอนุภาค
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fall {
+                    to {
+                        transform: translateY(${window.innerHeight + 100}px) rotate(360deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // ฟังก์ชันหยุดเพลง
+            function stopMusic() {
+                if (isPlaying) {
+                    isPlaying = false;
+                    birthdayMusic.pause();
+                    birthdayMusic.currentTime = 0;
+                    stopMusicBtn.style.display = 'none';
+                    playMusicBtn.style.display = 'inline-block';
+                    document.body.classList.remove('music-playing');
+                }
+            }
+
+            // ฟังก์ชันเล่นเพลงใหม่
+            function playMusic() {
+                if (!isPlaying) {
+                    isPlaying = true;
+                    birthdayMusic.play().then(() => {
+                        playMusicBtn.style.display = 'none';
+                        stopMusicBtn.style.display = 'inline-block';
+                        document.body.classList.add('music-playing');
+                    }).catch(error => {
+                        console.error('ไม่สามารถเล่นเพลงได้:', error);
+                        isPlaying = false;
+                    });
+                }
+            }
+
+            // Event Listeners
+            playMusicBtn.addEventListener('click', playMusic);
+            stopMusicBtn.addEventListener('click', stopMusic);
+
+            volumeSlider.addEventListener('input', function() {
+                const volume = this.value / 100;
+                birthdayMusic.volume = volume;
+                volumeValue.textContent = this.value + '%';
+            });
+
+            welcomeScreen.addEventListener('click', startAutoMusic);
+
+            document.addEventListener('keydown', function(e) {
+                if (!hasStarted && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    startAutoMusic();
+                }
+            });
+
+            birthdayMusic.addEventListener('error', function(e) {
+                console.error('เกิดข้อผิดพลาดกับไฟล์เพลง:', e);
+            });
+
+            birthdayMusic.addEventListener('loadstart', function() {
+                console.log('กำลังโหลดไฟล์เพลง...');
+            });
+
+            birthdayMusic.addEventListener('canplay', function() {
+                console.log('ไฟล์เพลงพร้อมเล่นแล้ว ✅');
+            });
+
+            setTimeout(() => {
+                if (!hasStarted) {
+                    console.log('เริ่มอัตโนมัติหลังจาก 5 วินาที...');
+                    startAutoMusic();
+                }
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
